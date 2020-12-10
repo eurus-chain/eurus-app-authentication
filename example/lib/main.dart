@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void testGenprvKey() {
-    String a = Mnemonic().ggenAddressPair(
+    String a = await Mnemonic().genAddressFromMneonic(
         'pipe isolate pyramid toddler magic whisper fortune rely abstract relax manual surface');
     print(a);
   }

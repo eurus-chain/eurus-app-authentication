@@ -3,7 +3,6 @@ import "dart:typed_data";
 
 import "package:convert/convert.dart" show hex;
 import 'package:pointycastle/digests/keccak.dart';
-import "package:pointycastle/digests/sha3.dart";
 import 'package:pointycastle/ecc/curves/secp256k1.dart';
 
 class EthAddress {
