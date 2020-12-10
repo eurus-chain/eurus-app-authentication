@@ -1,0 +1,22 @@
+PODS:
+  - app_authentication_kit (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - app_authentication_kit (from `.symlinks/plugins/app_authentication_kit/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  app_authentication_kit:
+    :path: ".symlinks/plugins/app_authentication_kit/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  app_authentication_kit: 2bee009b67b3320b6e41c082f03850f2df423c49
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.9.3
