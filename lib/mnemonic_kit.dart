@@ -44,7 +44,7 @@ class MnemonicKit {
   ///
   /// [String] [mnemonic] provided to generate
   String mnemonicToBase58(String mnemonic) {
-    if (validateMnemonic(mnemonic)) return null;
+    if (!validateMnemonic(mnemonic)) return null;
 
     PBKDF2 pbkdf2 = new PBKDF2();
     Uint8List seed = pbkdf2.process(mnemonic);
