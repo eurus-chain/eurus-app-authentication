@@ -1,11 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:app_authentication_kit/mnemonic.dart';
+import 'package:app_authentication_kit/mnemonic_kit.dart';
 import 'package:app_authentication_kit/utils/pbkdf2.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:app_authentication_kit/app_authentication_kit.dart';
 
 void main() {
@@ -20,10 +17,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   String hexString = '';
+  MnemonicKit mmKit;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      mmKit = MnemonicKit();
+    });
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -42,7 +43,6 @@ class _MyAppState extends State<MyApp> {
           children: [
             Text('Running on: $_platformVersion\n'),
             Text(tryHex()),
-            FlatButton(onPressed: testMnemonicValid, child: Text("tryMonic")),
             FlatButton(
               onPressed: testGenprvKey,
               child: Text("gen private key"),
@@ -66,20 +66,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   void tryMemonic() {
-    String dummy = Mnemonic().genMnemonicPhrase();
+    String dummy = MnemonicKit().genMnemonicPhrase();
 
     print(dummy);
   }
 
-  void testMnemonicValid() {
-    bool valid = Mnemonic().validateMnemonic(
-        'pipe isolate pyramid toddler magic whisper fortune rely abstract relax manual surface');
-    print('is valid: $valid');
-  }
-
   void testGenprvKey() {
-    String a = await Mnemonic().genAddressFromMneonic(
+    String base58 = MnemonicKit().mnemonicToBase58(
         'pipe isolate pyramid toddler magic whisper fortune rely abstract relax manual surface');
-    print(a);
+    AddressPair a = MnemonicKit().genAddressPairFromBase58(base58);
+    print("Print Result ${a.address} - ${a.privateKey}");
   }
 }

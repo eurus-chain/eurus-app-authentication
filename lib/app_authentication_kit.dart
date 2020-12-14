@@ -1,1 +1,1 @@
-export 'package:app_authentication_kit/mnemonic.dart';
+export 'package:app_authentication_kit/mnemonic_kit.dart';
