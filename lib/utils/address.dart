@@ -9,7 +9,7 @@ class EthAddress {
   /// Derives an Ethereum address from a given public key.
   String ethereumAddressFromPublicKey(Uint8List publicKey) {
     final decompressedPubKey = decompressPublicKey(publicKey);
-    // final hash = SHA3Digest(256).process(decompressedPubKey.sublist(1));
+
     final hash = KeccakDigest(256).process(decompressedPubKey.sublist(1));
     final address = hash.sublist(12, 32);
 
@@ -24,7 +24,6 @@ class EthAddress {
 
     final addr = strip0x(address).toLowerCase();
     final hash = ascii.encode(hex.encode(
-      // SHA3Digest(256).process(ascii.encode(addr)),
       KeccakDigest(256).process(ascii.encode(addr)),
     ));
 
@@ -64,6 +63,8 @@ class EthAddress {
     return addr == checksumAddress.substring(2);
   }
 
+
+  /// Remove "0x" or "0X" from the start of an address
   String strip0x(String address) {
     if (address.startsWith("0x") || address.startsWith("0X")) {
       return address.substring(2);
@@ -71,6 +72,7 @@ class EthAddress {
     return address;
   }
 
+  /// Check if the address is valid using regular expression 
   bool isValidFormat(String address) {
     return RegExp(r"^[0-9a-fA-F]{40}$").hasMatch(strip0x(address));
   }

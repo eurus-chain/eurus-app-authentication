@@ -69,7 +69,6 @@ void main() {
     });
 
     test('Generate First Address Pair', () {
-      print(expectedBase58);
       AddressPair addressPair =
           MnemonicKit().genAddressPairFromBase58(expectedBase58);
       expect(addressPair.address, address1.address);

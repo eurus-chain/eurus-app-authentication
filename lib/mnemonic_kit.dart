@@ -42,7 +42,8 @@ class MnemonicKit {
 
   /// Use mnemonic phrase to generate Base58
   ///
-  /// [String] [mnemonic] provided to generate
+  /// return [String] [base58] if mneomnic is valid
+  /// return [null] if mnemonic is invalid
   String mnemonicToBase58(String mnemonic) {
     if (!validateMnemonic(mnemonic)) return null;
 
@@ -56,7 +57,7 @@ class MnemonicKit {
 
   /// Generate Address and Private Key from Base58
   ///
-  /// Return [AddressPair] using seed
+  /// Return [AddressPair]
   AddressPair genAddressPairFromBase58(String base58, {int accountIdx = 0}) {
     BIP32 node = BIP32.fromBase58(base58);
     BIP32 child = node.derivePath("m/44'/60'/0'/0/$accountIdx");
