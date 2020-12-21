@@ -1,15 +1,40 @@
 # app_authentication_kit
 
-A new flutter plugin project.
+app_authentication_kit is a plugin for application to preform a set of authentication functions e.g. generate mnemonic phrase, generate private key from mnemonic phrase.
 
-## Getting Started
+## Usage
+### Generate Mnemonic Phrase
+```dart
+import 'package:app_authentication_kit/app_authentication_kit.dart';
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+// Generate 12 words mnemonic phrase
+// Return [String] contains 12 words
+String mPharse = MnemonicKit().genMnemonicPhrase();
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+// Generate 24 words mnemonic phrase
+// Return [String] contains 24 words
+String mPharse = MnemonicKit().genMnemonicPhrase(strength: 256);
+```
+### Validate Mneonic Phraase
+```dart
+import 'package:app_authentication_kit/app_authentication_kit.dart';
 
+// Validate mnemonic phrase
+// Return [bool], [true] indicates valid, [false] indicates invalid
+bool isValid = MnemonicKit().validateMnemonic(mPhrase);
+```
+
+### Import Mnemonic Phrase
+```dart
+import 'package:app_authentication_kit/app_authentication_kit.dart';
+
+// Generate root key for application to store in local
+// Uses this key to derivative Address and Private key
+String base58 = MnemonicKit().mnemonicToBase58(expectedMPharse);
+
+// Generate Address Pair
+// [AddressPair] includes [String] [address] and [String] [privateKey]
+AddressPair addressPair = MnemonicKit().genAddressPairFromBase58(base58);
+```
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
