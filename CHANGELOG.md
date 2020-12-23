@@ -1,3 +1,4 @@
 ## 0.0.1
-
-* TODO: Describe initial release.
+* Initialize Package
+## 0.0.2 
+* Files formatted according to dartfmt

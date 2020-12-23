@@ -63,7 +63,6 @@ class EthAddress {
     return addr == checksumAddress.substring(2);
   }
 
-
   /// Remove "0x" or "0X" from the start of an address
   String strip0x(String address) {
     if (address.startsWith("0x") || address.startsWith("0X")) {
@@ -72,7 +71,7 @@ class EthAddress {
     return address;
   }
 
-  /// Check if the address is valid using regular expression 
+  /// Check if the address is valid using regular expression
   bool isValidFormat(String address) {
     return RegExp(r"^[0-9a-fA-F]{40}$").hasMatch(strip0x(address));
   }
