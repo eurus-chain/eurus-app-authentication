@@ -1,3 +1,11 @@
+## 0.0.4
++ ### Added public key into AddressPair
++ ### Added Functions
+    + mnemonicToBIP32(String mnemonic)
+        + Generate BIP32 from mnemonic
+    + mnemonicPhraseToAddressPair(String mnemonic)
+        + Generate Address Pair form mnemonic phrase
+
 ## 0.0.3
 * Dependency bug quick fix
 

@@ -30,11 +30,15 @@ import 'package:app_authentication_kit/app_authentication_kit.dart';
 
 // Generate root key for application to store in local
 // Uses this key to derivative Address and Private key
-String base58 = MnemonicKit().mnemonicToBase58(expectedMPharse);
+String base58 = MnemonicKit().mnemonicToBase58(mPhrase);
 
 // Generate Address Pair
-// [AddressPair] includes [String] [address] and [String] [privateKey]
+// [AddressPair] includes [String] [address],  [String] [publicKey] and [String] [privateKey]
 AddressPair addressPair = MnemonicKit().genAddressPairFromBase58(base58);
+
+// Or directly Generate Address Pair from Mnemonic Phrase
+AddressPair addressPair = MnemonicKit().mnemonicPhraseToAddressPair(mPhrase);
 ```
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
