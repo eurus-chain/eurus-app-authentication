@@ -7,11 +7,15 @@ import 'package:pointycastle/ecc/curves/secp256k1.dart';
 
 class EthAddress {
   /// Derives an Ethereum address from a given public key.
-  String ethereumAddressFromPublicKey(Uint8List publicKey) {
+  String ethereumAddressFromPublicKey(Uint8List publicKey, {addressType = 0}) {
     final decompressedPubKey = decompressPublicKey(publicKey);
 
     final hash = KeccakDigest(256).process(decompressedPubKey.sublist(1));
     final address = hash.sublist(12, 32);
+
+    if (addressType == 1) {
+      return strip0x(hex.encode(address)).toUpperCase();
+    }
 
     return checksumEthereumAddress(hex.encode(address));
   }
@@ -27,7 +31,7 @@ class EthAddress {
       KeccakDigest(256).process(ascii.encode(addr)),
     ));
 
-    var newAddr = "";
+    var newAddr = "0x";
 
     for (var i = 0; i < addr.length; i++) {
       if (hash[i] >= 56) {

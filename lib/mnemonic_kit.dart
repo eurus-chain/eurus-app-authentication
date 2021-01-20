@@ -22,8 +22,9 @@ class MnemonicKit {
   String genMnemonicPhrase({int strength = 128, RandomBytes randomBytes}) {
     assert(strength % 32 == 0);
 
-    Uint8List entropy =
-        randomBytes == null ? Bip39().randomBytes(strength ~/ 8) : randomBytes(strength ~/ 8);
+    Uint8List entropy = randomBytes == null
+        ? Bip39().randomBytes(strength ~/ 8)
+        : randomBytes(strength ~/ 8);
 
     return Bip39().entropyToMnemonic(HEX.encode(entropy));
   }
@@ -65,26 +66,46 @@ class MnemonicKit {
   /// Generate Address and Private Key from Base58
   ///
   /// Return [AddressPair]
-  AddressPair genAddressPairFromBase58(String base58, {int accountIdx = 0}) {
+  AddressPair genAddressPairFromBase58(
+    String base58, {
+    int accountIdx = 0,
+    int addressType = 0,
+  }) {
     BIP32 node = BIP32.fromBase58(base58);
     BIP32 child = node.derivePath("m/44'/60'/0'/0/$accountIdx");
 
-    final String address = EthAddress().ethereumAddressFromPublicKey(child.publicKey);
+    final String address = EthAddress().ethereumAddressFromPublicKey(
+      child.publicKey,
+      addressType: addressType,
+    );
 
-    return AddressPair(address, HEX.encode(child.privateKey),
-        publicKey: HEX.encode(child.publicKey));
+    return AddressPair(
+      address,
+      HEX.encode(child.privateKey),
+      publicKey: HEX.encode(child.publicKey),
+    );
   }
 
   /// Generate Address, Public key and Private Key from BIP32
   ///
   /// Return [AddressPair]
-  AddressPair genAddressPairFromBIP32(BIP32 node, {int accountIdx = 0}) {
+  AddressPair genAddressPairFromBIP32(
+    BIP32 node, {
+    int accountIdx = 0,
+    int addressType = 0,
+  }) {
     BIP32 child = node.derivePath("m/44'/60'/0'/0/$accountIdx");
 
-    final String address = EthAddress().ethereumAddressFromPublicKey(child.publicKey);
+    final String address = EthAddress().ethereumAddressFromPublicKey(
+      child.publicKey,
+      addressType: addressType,
+    );
 
-    return AddressPair(address, HEX.encode(child.privateKey),
-        publicKey: HEX.encode(child.publicKey));
+    return AddressPair(
+      address,
+      HEX.encode(child.privateKey),
+      publicKey: HEX.encode(child.publicKey),
+    );
   }
 
   /// Generate Address, Public key and Private Key from Mnemonic Phrase
@@ -93,10 +114,12 @@ class MnemonicKit {
   AddressPair mnemonicPhraseToAddressPair(
     String mnemonic, {
     int accountIdx = 0,
+    int addressType = 0,
   }) {
     return genAddressPairFromBIP32(
       mnemonicToBIP32(mnemonic),
       accountIdx: accountIdx,
+      addressType: addressType,
     );
   }
 }
