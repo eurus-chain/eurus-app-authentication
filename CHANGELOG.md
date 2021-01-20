@@ -1,5 +1,7 @@
 ## 0.0.5
-* Removed [0x] from the start of address
++ ### Added [addressType] for having different address format
+    + addressType = 0, Address will start with [0x] and will have checksum
+    + addressType = 1, Address will not start with [0x] and will not have checksum
 ## 0.0.4
 + ### Added public key into AddressPair
 + ### Added Functions
