@@ -1,3 +1,5 @@
+## 0.0.5
+* Removed [0x] from the start of address
 ## 0.0.4
 + ### Added public key into AddressPair
 + ### Added Functions

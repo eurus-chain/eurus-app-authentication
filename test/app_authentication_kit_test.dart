@@ -10,17 +10,17 @@ void main() {
   final String invalidMPharse =
       "bargain priority menu sunny depart decide joi puppy maze course achieve deny";
   final AddressPair address1 = AddressPair(
-    '0x17D5440809303fDe49E0fb1ec2D3f93f4d3EFA12',
+    '17D5440809303fDe49E0fb1ec2D3f93f4d3EFA12',
     'f72233af8564d26c7cc5a1a3eda8bf03edcb31eca9c62c9d18097cbcd0e6e4aa',
     publicKey: '02340046704c14f3ad5b18006716e8a338988b904f5fd35cc66fc91e39395bb2cb',
   );
   final AddressPair address2 = AddressPair(
-    '0x3d7fdeEb9AAA6A7Cf34dDCbae63Fc01fA5857ba9',
+    '3d7fdeEb9AAA6A7Cf34dDCbae63Fc01fA5857ba9',
     '2b926ce06f57fe448d92d3f0bfd76ffdd14ee6b6aa6051f5818e024efc3114f5',
     publicKey: '034d0ba6902eeaa20a5e5eae06ff99a74af983e9f42d84ace8a515226767146060',
   );
   final AddressPair address3 = AddressPair(
-    '0x411F17f1cd87B9D9C8C9f56dd904ad8E049af3b1',
+    '411F17f1cd87B9D9C8C9f56dd904ad8E049af3b1',
     '7b86fa33a7d9fd6588f6f7574f64e0248d9e07408ea712fa59ea559a307ed301',
     publicKey: '03a76a9c3a19fd269f51b4a7ad77ef41d0dc81d7edb6e062331be750399ff1559e',
   );

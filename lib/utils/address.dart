@@ -27,7 +27,7 @@ class EthAddress {
       KeccakDigest(256).process(ascii.encode(addr)),
     ));
 
-    var newAddr = "0x";
+    var newAddr = "";
 
     for (var i = 0; i < addr.length; i++) {
       if (hash[i] >= 56) {
