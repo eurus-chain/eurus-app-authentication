@@ -1,3 +1,5 @@
+## 0.0.6
+* Dependency upstream version compatibility issue quick fix
 ## 0.0.5
 + ### Added [addressType] for having different address format
     + addressType = 0, Address will start with [0x] and will have checksum

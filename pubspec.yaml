@@ -1,6 +1,6 @@
 name: app_authentication_kit
 description: Flutter Plugin for application to perform various authentication functions
-version: 0.0.5
+version: 0.0.6
 homepage: https://www.goldhub.hk
 
 environment:
