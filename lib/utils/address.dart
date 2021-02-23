@@ -1,16 +1,45 @@
 import "dart:convert";
+import 'dart:ffi';
 import "dart:typed_data";
 
 import "package:convert/convert.dart" show hex;
-import 'package:pointycastle/digests/keccak.dart';
+// import 'package:pointycastle/digests/keccak.dart';
+import 'package:pointycastle/digests/sha3.dart';
 import 'package:pointycastle/ecc/curves/secp256k1.dart';
+
+// /web3dart-1.2.3/lib/src/crypto/keccac.dart
+const int _shaBytes = 256 ~/ 8;
+// keccak is implemented as sha3 digest in pointycastle, see
+// https://github.com/PointyCastle/pointycastle/issues/128
+final SHA3Digest sha3digest = SHA3Digest(_shaBytes * 8);
+
+Uint8List keccak256(Uint8List input) {
+  // return Uint8List(1);
+  sha3digest.reset();
+  return sha3digest.process(input);
+}
+
+Uint8List keccakUtf8(String input) {
+  return keccak256(uint8ListFromList(utf8.encode(input)));
+}
+
+Uint8List keccakAscii(String input) {
+  return keccak256(ascii.encode(input));
+}
+
+// /web3dart-1.2.3/lib/src/utils/typed_data.dart
+Uint8List uint8ListFromList(List<int> data) {
+  if (data is Uint8List) return data;
+
+  return Uint8List.fromList(data);
+}
 
 class EthAddress {
   /// Derives an Ethereum address from a given public key.
   String ethereumAddressFromPublicKey(Uint8List publicKey, {addressType = 0}) {
     final decompressedPubKey = decompressPublicKey(publicKey);
 
-    final hash = KeccakDigest(256).process(decompressedPubKey.sublist(1));
+    final hash = keccak256(decompressedPubKey.sublist(1));
     final address = hash.sublist(12, 32);
 
     if (addressType == 1) {
@@ -28,7 +57,7 @@ class EthAddress {
 
     final addr = strip0x(address).toLowerCase();
     final hash = ascii.encode(hex.encode(
-      KeccakDigest(256).process(ascii.encode(addr)),
+      keccak256(ascii.encode(addr)),
     ));
 
     var newAddr = "0x";
