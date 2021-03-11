@@ -9,10 +9,13 @@ typedef Uint8List RandomBytes(int size);
 
 class AddressPair {
   final String address;
-  final String publicKey;
+  // final String get publicKey => _publicKey??bytesToHex(BIP32.fromPrivateKey(hexToBytes(privateKey), null).publicKey);
+  String get publicKey => _publicKey??HEX.encode(BIP32.fromPrivateKey(HEX.decode(privateKey), null).publicKey);
+  // final String get publicKey => _publicKey??bytesToHex(ecc.pointFromScalar(hexToBytes(privateKey), true));
+  final String _publicKey;
   final String privateKey;
 
-  AddressPair(this.address, this.privateKey, {this.publicKey});
+  AddressPair(this.address, this.privateKey, {publicKey}) : this._publicKey = publicKey;
 }
 
 class MnemonicKit {
