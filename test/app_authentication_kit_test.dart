@@ -31,20 +31,17 @@ void main() {
   group('Generate mnemonic phrase', () {
     test('12 words Random mnemonic phrase', () {
       String mPharse = MnemonicKit().genMnemonicPhrase();
-      // print("12 words: " + mPharse);
       expect(mPharse.split(' ').length, 12);
     });
 
     test('24 words Random mnemonic phrase', () {
       String mPharse = MnemonicKit().genMnemonicPhrase(strength: 256);
-      // print("24 words: " + mPharse);
       expect(mPharse.split(' ').length, 24);
     });
 
     test('Fixed 12 words mnemonic phrase by fixed random bytes', () {
       String mPharse =
           MnemonicKit().genMnemonicPhrase(randomBytes: testingFixedBytes);
-      // print("fixed words: " + mPharse);
       expect(mPharse, expectedMPharse);
     });
   });

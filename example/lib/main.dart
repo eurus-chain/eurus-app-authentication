@@ -1,4 +1,5 @@
 import 'package:app_authentication_kit/mnemonic_kit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_authentication_kit/app_authentication_kit.dart';
 
@@ -45,10 +46,7 @@ class _MyAppState extends State<MyApp> {
               Padding(padding: EdgeInsets.all(5)),
               Row(
                 children: [
-                  Expanded(
-                      key: Key('gen_mnemonic_result'),
-                      flex: 2,
-                      child: Text(mnemonicPhrase)),
+                  Expanded(key: Key('gen_mnemonic_result'), flex: 2, child: Text(mnemonicPhrase)),
                   Expanded(
                     flex: 1,
                     child: Column(
@@ -90,10 +88,7 @@ class _MyAppState extends State<MyApp> {
                           child: Text('Copy to Inputfield',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: mnemonicPhrase == null ||
-                                          mnemonicPhrase == ''
-                                      ? Colors.grey
-                                      : Colors.black)),
+                                  color: mnemonicPhrase == null || mnemonicPhrase == '' ? Colors.grey : Colors.black)),
                         ),
                       ],
                     ),
@@ -180,10 +175,7 @@ class _MyAppState extends State<MyApp> {
                       child: Text(
                         'Generate Base58',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: inputMPraseValid == true
-                                ? Colors.black
-                                : Colors.grey),
+                        style: TextStyle(color: inputMPraseValid == true ? Colors.black : Colors.grey),
                       ),
                     ),
                   ),
@@ -201,10 +193,7 @@ class _MyAppState extends State<MyApp> {
                       child: Text(
                         'Generate AddressPair',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: inputMPraseValid == true && base58 != ''
-                                ? Colors.black
-                                : Colors.grey),
+                        style: TextStyle(color: inputMPraseValid == true && base58 != '' ? Colors.black : Colors.grey),
                       ),
                     ),
                   ),
@@ -216,7 +205,10 @@ class _MyAppState extends State<MyApp> {
                   Expanded(flex: 2, child: Text('Base58: ')),
                   Expanded(
                     flex: 5,
-                    child: Text(base58 == null ? '' : base58, key: Key('base58_val'),),
+                    child: Text(
+                      base58 == null ? '' : base58,
+                      key: Key('base58_val'),
+                    ),
                   ),
                 ],
               ),
@@ -226,8 +218,10 @@ class _MyAppState extends State<MyApp> {
                   Expanded(flex: 2, child: Text('Private Key: ')),
                   Expanded(
                     flex: 5,
-                    child:
-                        Text(addressPair == null ? '' : addressPair.privateKey, key: Key('privateKey_val'),),
+                    child: Text(
+                      addressPair == null ? '' : addressPair.privateKey,
+                      key: Key('privateKey_val'),
+                    ),
                   ),
                 ],
               ),
@@ -237,10 +231,14 @@ class _MyAppState extends State<MyApp> {
                   Expanded(flex: 2, child: Text('Address: ')),
                   Expanded(
                     flex: 5,
-                    child: Text(addressPair == null ? '' : addressPair.address, key: Key('address_val'),),
+                    child: Text(
+                      addressPair == null ? '' : addressPair.address,
+                      key: Key('address_val'),
+                    ),
                   ),
                 ],
-              )
+              ),
+              FlatButton(onPressed: testingBtnOnPress, child: Text('Texting')),
             ],
           ),
         ),
@@ -249,7 +247,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   /// Generate 12 / 24 words mnemonic phrase base on strength
-  /// 
+  ///
   /// [strength] = 128 for 12 words
   /// [strength] = 256 for 24 words
   String _genMnemonic({int strength = 128}) {
@@ -271,6 +269,19 @@ class _MyAppState extends State<MyApp> {
     return MnemonicKit().genAddressPairFromBase58(b58);
   }
 
+  void testingBtnOnPress() async {
+    AddressPair result = await compute(_forCompute, {
+      'mnemonic': 'bargain priority menu sunny depart decide join puppy maze course achieve deny',
+      'account': 1,
+      'change': 0,
+      'accountIdx': 0,
+      'pw': 'thisisppppwww',
+    });
+    print('result::: ${result.address}');
+    print('result::: ${result.privateKey}');
+    print('result::: ${result.publicKey}');
+  }
+
   /// Clear input field and generated values
   void _resetValidFlag() {
     setState(() {
@@ -279,4 +290,14 @@ class _MyAppState extends State<MyApp> {
       addressPair = null;
     });
   }
+}
+
+AddressPair _forCompute(Map<String, dynamic> args) {
+  return MnemonicKit().mnemonicPhraseToAddressPair(
+    args['mnemonic'],
+    account: args['account'],
+    change: args['change'],
+    accountIdx: args['accountIdx'],
+    pw: args['pw'],
+  );
 }
