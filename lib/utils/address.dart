@@ -6,11 +6,23 @@ import "package:convert/convert.dart" show hex;
 import 'package:pointycastle/digests/sha3.dart';
 import 'package:pointycastle/ecc/curves/secp256k1.dart';
 
+// Custom SHA3Digest to remove absorbBit by overriding doFinal
+class EurusSHA3Digest extends SHA3Digest {
+  EurusSHA3Digest([int? bitLength = 288]) : super(bitLength);
+
+  @override
+  int doFinal(Uint8List out, int outOff) {
+    squeeze(out, outOff, fixedOutputLength);
+    reset();
+    return digestSize;
+  }
+}
+
 // /web3dart-1.2.3/lib/src/crypto/keccac.dart
 const int _shaBytes = 256 ~/ 8;
 // keccak is implemented as sha3 digest in pointycastle, see
 // https://github.com/PointyCastle/pointycastle/issues/128
-final SHA3Digest sha3digest = SHA3Digest(_shaBytes * 8);
+final SHA3Digest sha3digest = EurusSHA3Digest(_shaBytes * 8);
 
 Uint8List keccak256(Uint8List input) {
   // return Uint8List(1);
@@ -117,6 +129,6 @@ class EthAddress {
     }
 
     final ecPublicKey = ECCurve_secp256k1().curve.decodePoint(publicKey);
-    return ecPublicKey.getEncoded(false);
+    return ecPublicKey?.getEncoded(false) ?? Uint8List(0);
   }
 }

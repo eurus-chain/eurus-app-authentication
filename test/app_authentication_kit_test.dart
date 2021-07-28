@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:app_authentication_kit/utils/address.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_authentication_kit/app_authentication_kit.dart';
 
@@ -65,12 +66,12 @@ void main() {
 
   group('Import wallet', () {
     test('Generate Base58', () {
-      String base58 = MnemonicKit().mnemonicToBase58(expectedMPharse);
+      String? base58 = MnemonicKit().mnemonicToBase58(expectedMPharse);
       expect(base58, expectedBase58);
     });
 
     test('Import account with invalid mnemonic', () {
-      String base58 = MnemonicKit().mnemonicToBase58(invalidMPharse);
+      String? base58 = MnemonicKit().mnemonicToBase58(invalidMPharse);
       expect(base58, null);
     });
 
@@ -139,7 +140,7 @@ void main() {
 }
 
 Uint8List testingFixedBytes(int size) {
-  Uint8List fixedBytes = Uint8List.fromList(
+  Uint8List fixedBytes = uint8ListFromList(
       [18, 181, 94, 44, 236, 179, 172, 113, 158, 13, 112, 137, 134, 40, 7, 29]);
 
   return fixedBytes;

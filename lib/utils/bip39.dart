@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:app_authentication_kit/utils/address.dart';
 import 'package:app_authentication_kit/wordlist/english.dart';
 import 'package:crypto/crypto.dart';
 import 'package:hex/hex.dart';
@@ -25,8 +26,8 @@ class Bip39 {
     if (entropy.length % 4 != 0) {
       throw ArgumentError(MnemonicError.INVALID_ENTROPY);
     }
-    final entropyBits = _bytesToBinary(entropy);
-    final checksumBits = _deriveChecksumBits(entropy);
+    final entropyBits = _bytesToBinary(uint8ListFromList(entropy));
+    final checksumBits = _deriveChecksumBits(uint8ListFromList(entropy));
     final bits = entropyBits + checksumBits;
     final regex =
         new RegExp(r".{1,11}", caseSensitive: false, multiLine: false);
@@ -34,9 +35,8 @@ class Bip39 {
         .allMatches(bits)
         .map((match) => match.group(0))
         .toList(growable: false);
-    List<String> wordlist = WORDLIST;
     String words =
-        chunks.map((binary) => wordlist[_binaryToByte(binary)]).join(' ');
+        chunks.map((binary) => WORDLIST[_binaryToByte(binary ?? '')]).join(' ');
     return words;
   }
 
@@ -45,10 +45,9 @@ class Bip39 {
     if (words.length % 3 != 0) {
       throw new ArgumentError(MnemonicError.INVALID_MNEMONIC);
     }
-    final wordlist = WORDLIST;
     // convert word indices to 11 bit binary strings
     final bits = words.map((word) {
-      final index = wordlist.indexOf(word);
+      final index = WORDLIST.indexOf(word);
       if (index == -1) {
         throw new ArgumentError(MnemonicError.INVALID_MNEMONIC);
       }
@@ -61,9 +60,9 @@ class Bip39 {
 
     // calculate the checksum and compare
     final regex = RegExp(r".{1,8}");
-    final entropyBytes = Uint8List.fromList(regex
+    final entropyBytes = uint8ListFromList(regex
         .allMatches(entropyBits)
-        .map((match) => _binaryToByte(match.group(0)))
+        .map((match) => _binaryToByte(match.group(0) ?? ''))
         .toList(growable: false));
     if (entropyBytes.length < 16) {
       throw StateError(MnemonicError.INVALID_ENTROPY.toString());
@@ -103,7 +102,7 @@ class Bip39 {
   String _deriveChecksumBits(Uint8List entropy) {
     final ent = entropy.length * 8;
     final cs = ent ~/ 32;
-    final hash = sha256.newInstance().convert(entropy);
-    return _bytesToBinary(Uint8List.fromList(hash.bytes)).substring(0, cs);
+    final hash = sha256.convert(entropy);
+    return _bytesToBinary(uint8ListFromList(hash.bytes)).substring(0, cs);
   }
 }

@@ -17,10 +17,10 @@ class _MyAppState extends State<MyApp> {
 
   String mnemonicPhrase = "";
 
-  bool inputMPraseValid;
+  bool? inputMPraseValid;
 
   String base58 = "";
-  AddressPair addressPair;
+  AddressPair? addressPair;
 
   @override
   void initState() {
@@ -46,12 +46,15 @@ class _MyAppState extends State<MyApp> {
               Padding(padding: EdgeInsets.all(5)),
               Row(
                 children: [
-                  Expanded(key: Key('gen_mnemonic_result'), flex: 2, child: Text(mnemonicPhrase)),
+                  Expanded(
+                      key: Key('gen_mnemonic_result'),
+                      flex: 2,
+                      child: Text(mnemonicPhrase)),
                   Expanded(
                     flex: 1,
                     child: Column(
                       children: [
-                        FlatButton(
+                        TextButton(
                           key: Key('gen_mnemonic_btn'),
                           onPressed: () {
                             String mPhrase = _genMnemonic();
@@ -64,7 +67,7 @@ class _MyAppState extends State<MyApp> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        FlatButton(
+                        TextButton(
                           key: Key('gen_mnemonic_24_btn'),
                           onPressed: () {
                             String mPhrase = _genMnemonic(strength: 256);
@@ -77,18 +80,18 @@ class _MyAppState extends State<MyApp> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        FlatButton(
+                        TextButton(
                           key: Key('copy_mnemonic_btn'),
                           onPressed: () {
-                            if (mnemonicPhrase != null) {
-                              mPhraseTextController..text = mnemonicPhrase;
-                              _resetValidFlag();
-                            }
+                            mPhraseTextController..text = mnemonicPhrase;
+                            _resetValidFlag();
                           },
                           child: Text('Copy to Inputfield',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: mnemonicPhrase == null || mnemonicPhrase == '' ? Colors.grey : Colors.black)),
+                                  color: mnemonicPhrase.isEmpty
+                                      ? Colors.grey
+                                      : Colors.black)),
                         ),
                       ],
                     ),
@@ -114,7 +117,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   Expanded(
                     flex: 1,
-                    child: FlatButton(
+                    child: TextButton(
                       key: Key('clear_btn'),
                       onPressed: () {
                         mPhraseTextController.clear();
@@ -146,7 +149,7 @@ class _MyAppState extends State<MyApp> {
               Row(
                 children: [
                   Expanded(
-                    child: FlatButton(
+                    child: TextButton(
                       key: Key('validate_btn'),
                       onPressed: () {
                         String inputVal = mPhraseTextController.text;
@@ -162,10 +165,10 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                   Expanded(
-                    child: FlatButton(
+                    child: TextButton(
                       key: Key('gen_base58_btn'),
                       onPressed: () {
-                        if (inputMPraseValid) {
+                        if (inputMPraseValid ?? false) {
                           String b58 = _genBase58(mPhraseTextController.text);
                           setState(() {
                             base58 = b58;
@@ -175,15 +178,18 @@ class _MyAppState extends State<MyApp> {
                       child: Text(
                         'Generate Base58',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: inputMPraseValid == true ? Colors.black : Colors.grey),
+                        style: TextStyle(
+                            color: inputMPraseValid == true
+                                ? Colors.black
+                                : Colors.grey),
                       ),
                     ),
                   ),
                   Expanded(
-                    child: FlatButton(
+                    child: TextButton(
                       key: Key('gen_addressPair_btn'),
                       onPressed: () {
-                        if (inputMPraseValid && base58 != '') {
+                        if ((inputMPraseValid ?? false) && base58 != '') {
                           AddressPair aPair = _genAddressPair(base58);
                           setState(() {
                             addressPair = aPair;
@@ -193,7 +199,10 @@ class _MyAppState extends State<MyApp> {
                       child: Text(
                         'Generate AddressPair',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: inputMPraseValid == true && base58 != '' ? Colors.black : Colors.grey),
+                        style: TextStyle(
+                            color: inputMPraseValid == true && base58 != ''
+                                ? Colors.black
+                                : Colors.grey),
                       ),
                     ),
                   ),
@@ -206,7 +215,7 @@ class _MyAppState extends State<MyApp> {
                   Expanded(
                     flex: 5,
                     child: Text(
-                      base58 == null ? '' : base58,
+                      base58,
                       key: Key('base58_val'),
                     ),
                   ),
@@ -219,7 +228,7 @@ class _MyAppState extends State<MyApp> {
                   Expanded(
                     flex: 5,
                     child: Text(
-                      addressPair == null ? '' : addressPair.privateKey,
+                      addressPair == null ? '' : addressPair!.privateKey,
                       key: Key('privateKey_val'),
                     ),
                   ),
@@ -232,13 +241,13 @@ class _MyAppState extends State<MyApp> {
                   Expanded(
                     flex: 5,
                     child: Text(
-                      addressPair == null ? '' : addressPair.address,
+                      addressPair == null ? '' : addressPair!.address,
                       key: Key('address_val'),
                     ),
                   ),
                 ],
               ),
-              FlatButton(onPressed: testingBtnOnPress, child: Text('Texting')),
+              TextButton(onPressed: testingBtnOnPress, child: Text('Texting')),
             ],
           ),
         ),
@@ -261,7 +270,7 @@ class _MyAppState extends State<MyApp> {
 
   /// Generate Base58 from mnemonic phrase
   String _genBase58(String mPhrase) {
-    return MnemonicKit().mnemonicToBase58(mPhrase);
+    return MnemonicKit().mnemonicToBase58(mPhrase) ?? '';
   }
 
   /// Generate address and private key from Base58
@@ -271,7 +280,8 @@ class _MyAppState extends State<MyApp> {
 
   void testingBtnOnPress() async {
     AddressPair result = await compute(_forCompute, {
-      'mnemonic': 'bargain priority menu sunny depart decide join puppy maze course achieve deny',
+      'mnemonic':
+          'bargain priority menu sunny depart decide join puppy maze course achieve deny',
       'account': 1,
       'change': 0,
       'accountIdx': 0,

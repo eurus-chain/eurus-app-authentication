@@ -9,21 +9,24 @@ typedef Uint8List RandomBytes(int size);
 
 class AddressPair {
   final String address;
-  String get publicKey => _publicKey ?? HEX.encode(BIP32.fromPrivateKey(HEX.decode(privateKey), null).publicKey);
+  String get publicKey => _publicKey;
   final String _publicKey;
   final String privateKey;
 
-  AddressPair(this.address, this.privateKey, {publicKey}) : this._publicKey = publicKey;
+  AddressPair(this.address, this.privateKey, {publicKey})
+      : this._publicKey = publicKey;
 }
 
 class MnemonicKit {
   /// Generate 12 words mnemonic phrase
   ///
   /// Return mnemonic phrase in [String]
-  String genMnemonicPhrase({int strength = 128, RandomBytes randomBytes}) {
+  String genMnemonicPhrase({int strength = 128, RandomBytes? randomBytes}) {
     assert(strength % 32 == 0);
 
-    Uint8List entropy = randomBytes == null ? Bip39().randomBytes(strength ~/ 8) : randomBytes(strength ~/ 8);
+    Uint8List entropy = randomBytes == null
+        ? Bip39().randomBytes(strength ~/ 8)
+        : randomBytes(strength ~/ 8);
 
     return Bip39().entropyToMnemonic(HEX.encode(entropy));
   }
@@ -44,7 +47,7 @@ class MnemonicKit {
   ///
   /// return [BIP32] if mneomnic is valid
   /// return [null] if mnemonic is invalid
-  BIP32 mnemonicToBIP32(String mnemonic, {String pw}) {
+  BIP32? mnemonicToBIP32(String mnemonic, {String? pw}) {
     if (!validateMnemonic(mnemonic)) return null;
 
     PBKDF2 pbkdf2 = new PBKDF2(pw: pw);
@@ -58,7 +61,7 @@ class MnemonicKit {
   ///
   /// return [String] [base58] if mneomnic is valid
   /// return [null] if mnemonic is invalid
-  String mnemonicToBase58(String mnemonic, {String pw}) {
+  String? mnemonicToBase58(String mnemonic, {String? pw}) {
     return mnemonicToBIP32(mnemonic, pw: pw)?.toBase58();
   }
 
@@ -82,7 +85,7 @@ class MnemonicKit {
 
     return AddressPair(
       address,
-      HEX.encode(child.privateKey),
+      HEX.encode(uint8ListFromList(child.privateKey ?? [])),
       publicKey: HEX.encode(child.publicKey),
     );
   }
@@ -91,24 +94,24 @@ class MnemonicKit {
   ///
   /// Return [AddressPair]
   AddressPair genAddressPairFromBIP32(
-    BIP32 node, {
+    BIP32? node, {
     int account = 0,
     int change = 0,
     int accountIdx = 0,
     int addressType = 0,
   }) {
     print("m/44'/60'/$account'/$change/$accountIdx");
-    BIP32 child = node.derivePath("m/44'/60'/$account'/$change/$accountIdx");
+    BIP32? child = node?.derivePath("m/44'/60'/$account'/$change/$accountIdx");
 
     final String address = EthAddress().ethereumAddressFromPublicKey(
-      child.publicKey,
+      child?.publicKey ?? Uint8List(0),
       addressType: addressType,
     );
 
     return AddressPair(
       address,
-      HEX.encode(child.privateKey),
-      publicKey: HEX.encode(child.publicKey),
+      HEX.encode(uint8ListFromList(child?.privateKey ?? Uint8List(0))),
+      publicKey: HEX.encode(child?.publicKey ?? Uint8List(0)),
     );
   }
 
@@ -121,7 +124,7 @@ class MnemonicKit {
     int change = 0,
     int accountIdx = 0,
     int addressType = 0,
-    String pw,
+    String? pw,
   }) {
     return genAddressPairFromBIP32(
       mnemonicToBIP32(mnemonic, pw: pw),
